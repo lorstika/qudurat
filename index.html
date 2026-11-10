@@ -1,3 +1,26 @@
+<meta name="viewport" content="width=device-width,initial-scale=1"><style id="miran-access-gate">body{visibility:hidden}</style>
+<script type="module">
+// Public browser configuration. This key grants no direct access to private data.
+// Never put a database password or a service-role/secret key here.
+const config = {
+  url: 'https://drdsehzwjrxqwheohvih.supabase.co',
+  publicKey: 'sb_publishable_mVtqsefpvIPjr9fV234Bng_Lx7arKjO'
+};
+
+
+try {
+ const session=sessionStorage.getItem('miran.session');
+ if(!session)throw new Error('Sign-in required');
+ const response=await fetch(config.url+'/rest/v1/rpc/miran_api',{method:'POST',headers:{'Content-Type':'application/json',apikey:config.publicKey},body:JSON.stringify({route:'me',session_token:session})});
+ const result=await response.json();
+ if(!response.ok||result.status!==200||result.data.user.mustChange)throw new Error('Sign-in required');
+ const accountLink=document.createElement('a');accountLink.className='btn small ghost';accountLink.href='./portal.html';accountLink.textContent='اختباراتي وحسابي';document.querySelector('.top .wrap .seg')?.before(accountLink);
+ document.getElementById('miran-access-gate')?.remove();
+} catch {
+ location.replace(new URL('./portal.html',location.href));
+}
+
+</script>
 <title>مران القدرات</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
